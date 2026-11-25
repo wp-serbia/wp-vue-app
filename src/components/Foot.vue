@@ -1,6 +1,6 @@
 <template>
   <footer>
-    &copy; 2024 <a href="https://www.joomlaserbia.info">Joomla Serbia</a>.
+    &copy; 2006 <strong>WP Vue App</strong>.
   </footer>
 </template>
 
