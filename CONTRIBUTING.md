@@ -9,7 +9,7 @@
 
 ## Feature Requests / Bug Reports
 
-If you have a feature request or bug you've noticed, please [make an issue](https://github.com/joomlaserbia/wp-vuejs/issues) on Github, and assign the appropriate label.
+If you have a feature request or bug you've noticed, please [make an issue](https://github.com/wp-serbia/wp-vuejs/issues) on Github, and assign the appropriate label.
 
 ## Make Pull Request
 

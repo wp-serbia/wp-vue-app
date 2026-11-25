@@ -29,9 +29,13 @@ Run `yarn build`.
 
 ### Deploy to Netlify
 
-Netlify is amazing, so if you're in need of somewhere to host your own version of this project, I highly recommend it.
+To keep the same production URL, open the existing Netlify project that owns that URL. Under **Project configuration → Developer settings → Continuous deployment → Repository**, link `wp-serbia/wp-vuejs`. If the old repository is listed, choose **Manage repository → Link to a different repository**. Set the production branch to `master` if that is the branch you publish from.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/joomlaserbia/wp-vuejs)
+Once linked, push commits to the production branch. Netlify builds and publishes each update to the same project. [Netlify repository linking guide](https://docs.netlify.com/build/git-workflows/repo-permissions-linking/)
+
+**Create a separate site from this template** only if you want a new Netlify project. The button below starts that workflow.
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/wp-serbia/wp-vuejs)
 
 ## Caching
 
