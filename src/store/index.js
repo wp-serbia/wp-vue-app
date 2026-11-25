@@ -1,11 +1,8 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import cache from "./modules/cache";
 import bus from "../bus";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   state: {
     endpoint: REST_ENDPOINT
   },
@@ -13,8 +10,8 @@ export default new Vuex.Store({
   mutations: {
     updateEndpoint(state, endpoint) {
       state.endpoint = endpoint;
-      bus.$emit("clearError");
-      bus.$emit("bumpViewKey", "Updating content...");
+      bus.emit("clearError");
+      bus.emit("bumpViewKey", "Updating content...");
     }
   },
 

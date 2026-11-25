@@ -19,8 +19,8 @@
             slug: post.slug
           }
         }"
-        v-html="post.title.rendered"
       >
+        <span v-html="post.title.rendered"></span>
       </router-link>
     </h3>
   </li>
@@ -41,9 +41,9 @@ export default {
 <style scoped lang="scss">
 li {
   display: flex;
-  flex-direction: colu mn;
+  flex-direction: column;
   background: #cccccc;
-  border: 2px solid darken(#cccccc, 5%);
+  border: 2px solid #bfbfbf;
   padding: 2rem 1rem;
   text-align: center;
 
@@ -61,7 +61,7 @@ img {
   }
 }
 
-span {
+li > span {
   font-size: 1.4em;
   color: #ccc;
   margin: 1rem 0 0.5rem;

@@ -3,13 +3,13 @@
 // Copyright 2013-2019 thoughtbot, inc.
 // MIT License
 
-@import "variables";
-@import "mixins";
+@use "variables";
+@use "mixins";
 
-@import "buttons";
-@import "forms";
-@import "layout";
-@import "lists";
-@import "media";
-@import "tables";
-@import "typography";
+@use "buttons";
+@use "forms";
+@use "layout";
+@use "lists";
+@use "media";
+@use "tables";
+@use "typography";

@@ -49,6 +49,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@use "../assets/scss/variables" as *;
 div {
   position: fixed;
   top: 0;

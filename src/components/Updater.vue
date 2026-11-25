@@ -38,11 +38,7 @@ export default {
     },
 
     submit: function() {
-      this.$ga.event({
-        eventCategory: "form",
-        eventAction: "updateEndpoint",
-        eventLabel: `Update to ${this.updatedEndpoint}`
-      });
+      window.gtag?.("event", "updateEndpoint", { event_category: "form" });
 
       this.$store.commit("cache/wipe");
 
@@ -57,6 +53,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@use "../assets/scss/variables" as *;
 div {
   position: fixed;
   top: 0;

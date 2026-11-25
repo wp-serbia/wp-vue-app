@@ -1,11 +1,8 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Feed from "./views/Feed";
-import FourOFour from "./views/FourOFour";
-import Post from "./views/Post";
+import { createRouter, createWebHistory } from "vue-router";
+import Feed from "./views/Feed.vue";
+import FourOFour from "./views/FourOFour.vue";
+import Post from "./views/Post.vue";
 import bus from "./bus";
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -34,19 +31,20 @@ const routes = [
     component: FourOFour
   },
   {
-    path: "*",
+    path: "/:pathMatch(.*)*",
     redirect: "/404"
   }
 ];
 
-const router = new VueRouter({
-  mode: "history",
+const router = createRouter({
+  history: createWebHistory(),
   routes
 });
 
-router.afterEach(() => {
+router.afterEach((to, from, failure) => {
+  if (failure) return;
   //-- Bump the key on App component to force component to update on route change.
-  bus.$emit("bumpViewKey");
+  bus.emit("bumpViewKey");
 });
 
 export default router;
