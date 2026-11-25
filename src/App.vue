@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <TopBar @showUpdater="showUpdater = true" />
 
     <div id="wrapper">
@@ -11,7 +11,7 @@
         :showWheel="loadingWheel"
       />
 
-      <router-view :key="this.viewKey"></router-view>
+      <router-view :key="viewKey"></router-view>
     </div>
 
     <Foot />
@@ -20,10 +20,10 @@
 
 <script>
 import bus from "./bus";
-import Foot from "./components/Foot";
-import Loading from "./components/Loading";
-import Updater from "./components/Updater";
-import TopBar from "./components/TopBar";
+import Foot from "./components/Foot.vue";
+import Loading from "./components/Loading.vue";
+import Updater from "./components/Updater.vue";
+import TopBar from "./components/TopBar.vue";
 
 export default {
   name: "App",
@@ -42,10 +42,10 @@ export default {
   created: function() {
     this.assignEndpointFromURL();
 
-    bus.$on("toggleLoading", (status = true) => {
+    bus.on("toggleLoading", (status = true) => {
       if (typeof status === "string") {
         this.loadingOn = true;
-        this.showWheel = false;
+        this.loadingWheel = false;
         this.loadingMessage = status;
         return;
       }
@@ -55,17 +55,17 @@ export default {
       this.loadingOn = status;
     });
 
-    bus.$on("bumpViewKey", loadingMessage => {
-      bus.$emit("toggleLoading", loadingMessage);
-      this.viewKey = this.viewKey + 1;
+    bus.on("bumpViewKey", loadingMessage => {
+      bus.emit("toggleLoading", loadingMessage);
+      this.viewKey += 1;
     });
 
-    bus.$on("showUpdater", errorMessage => {
+    bus.on("showUpdater", errorMessage => {
       this.showUpdater = true;
       this.error = errorMessage;
     });
 
-    bus.$on("clearError", () => {
+    bus.on("clearError", () => {
       this.error = "";
     });
   },
@@ -90,7 +90,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "assets/scss/_base.scss";
+@use "./assets/scss/mixins" as *;
+@use "./assets/scss/base";
 
 #app {
   -webkit-font-smoothing: antialiased;

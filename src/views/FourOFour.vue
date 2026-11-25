@@ -16,7 +16,7 @@
     name: 'FourOFour',
 
     created: function () {
-      bus.$emit('toggleLoading', false);
+      bus.emit('toggleLoading', false);
     },
 
     methods: {

@@ -28,7 +28,7 @@
 import bus from "../bus";
 import utils from "../mixins/utils";
 import ajax from "../mixins/ajax";
-import PostBody from "../components/PostBody";
+import PostBody from "../components/PostBody.vue";
 
 export default {
   name: "Post",
@@ -47,45 +47,32 @@ export default {
   },
 
   created: async function() {
-    this.post = await this.setPost();
+    try {
+      const response = await this.get(`/posts?slug=${encodeURIComponent(this.$route.params.slug)}`);
+      this.post = response.data[0];
+      if (!this.post) throw new Error("Post not found");
+    } catch {
+      this.$router.replace({ name: "four-o-four" });
+      return;
+    }
     this.link = this.post.link;
     this.date = this.getFormattedDate(this.post.date);
     this.title = this.post.title.rendered;
     this.content = this.post.content.rendered;
     this.featured_image = await this.getFeaturedImage(this.post.featured_media);
 
-    bus.$emit("toggleLoading", false);
+    bus.emit("toggleLoading", false);
   },
 
   methods: {
-    setPost: function() {
-      return new Promise(async resolve => {
-        let response;
-
-        try {
-          response = await this.get(`/posts?slug=${this.$route.params.slug}`);
-        } catch (error) {
-          this.$router.push({ name: "four-o-four" });
-          return;
-        }
-
-        resolve(response.data[0]);
-      });
-    },
-
-    getFeaturedImage: async function(id) {
-      let response;
+    async getFeaturedImage(id) {
+      if (!id) return null;
       try {
-        if (post.featured_media <= 0) {
-          throw "No featured image.";
-        }
-
-        response = await this.get(`/media/${id}`);
-      } catch (error) {
+        const response = await this.get(`/media/${id}`);
+        return response.data.media_details?.sizes?.medium?.source_url;
+      } catch {
         return null;
       }
-
-      return response.data.media_details.sizes["medium"].source_url;
     }
   },
 
@@ -96,11 +83,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@use "../assets/scss/mixins" as *;
+@use "../assets/scss/variables" as *;
 article {
   max-width: 900px;
   margin: 0 auto;
   background: #cccccc;
-  border: 2px solid darken(#cccccc, 5%);
+  border: 2px solid #bfbfbf;
   padding: 1rem;
 
   @include media($small) {

@@ -38,7 +38,7 @@ export default {
 
     sourceURL: function() {
       return (
-        this.splitEndpoint[0] + this.splitEndpoint[1] + this.splitEndpoint[2]
+        this.splitEndpoint.slice(0, 3).join("/")
       );
     }
   },
@@ -52,6 +52,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@use "../assets/scss/mixins" as *;
 nav {
   display: flex;
   flex-direction: column;
@@ -61,7 +62,7 @@ nav {
   margin-bottom: 1rem;
   background: rgba(#cccccc, 0.9);
   padding: 1rem 2rem;
-  border-bottom: 2px solid darken(#cccccc, 5%);
+  border-bottom: 2px solid #bfbfbf;
 
   @include media($small) {
     flex-direction: row;

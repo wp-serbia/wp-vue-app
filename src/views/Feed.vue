@@ -29,8 +29,8 @@
 <script>
 import bus from '../bus';
 import ajax from '../mixins/ajax';
-import Card from '../components/Card';
-import Pagination from '../components/Pagination';
+import Card from '../components/Card.vue';
+import Pagination from '../components/Pagination.vue';
 
 export default {
   name: 'Feed',
@@ -64,9 +64,9 @@ export default {
           `/posts?per_page=${POSTS_PER_PAGE}&page=${this.page}`
         );
         this.totalPages = response.headers['x-wp-totalpages'];
-      } catch (error) {
-        bus.$emit('showUpdater', 'Are you sure that\'s a valid endpoint?');
-        bus.$emit('toggleLoading', false);
+      } catch {
+        bus.emit('showUpdater', 'Are you sure that\'s a valid endpoint?');
+        bus.emit('toggleLoading', false);
         return;
       }
 
@@ -74,63 +74,37 @@ export default {
 
       this.getAdjacentPageData();
 
-      bus.$emit('toggleLoading', false);
+      bus.emit('toggleLoading', false);
     },
 
-    getAdjacentPageData: async function (prevPage = false) {
-
-      let page = prevPage === true
-              ? parseInt(this.page) - 1
-              : parseInt(this.page) + 1;
-
-      let response;
-
-      if(page > 0) {
+    async getAdjacentPageData() {
+      const page = Number(this.page);
+      for (const adjacent of [page + 1, page - 1]) {
+        if (adjacent < 1 || adjacent > this.totalPages) continue;
         try {
-          response = await this.get(
-            `/posts?per_page=${POSTS_PER_PAGE}&page=${page}`
+          const response = await this.get(
+            `/posts?per_page=${POSTS_PER_PAGE}&page=${adjacent}`
           );
-        } catch (error) {
-          console.error(error);
+          await this.getFeaturedImages(response.data);
+        } catch {
+          // Prefetching is optional. A visit to the page will retry.
         }
-
-        response.data.forEach((post) => {
-          if(post.featured_media <= 0) return;
-          this.get(`/media/${post.featured_media}`);
-        });
-      }
-
-      if(!prevPage) {
-        this.getAdjacentPageData(true);
       }
     },
 
-    getFeaturedImages: function (posts) {
-      return new Promise((resolve) => {
-        let requests = posts.map((post) => {
-          return new Promise( async (resolve) => {
-            let response;
-
-            try {
-
-              if(post.featured_media <= 0) {
-                throw "No featured image.";
-              }
-
-              response = await this.get(
-                `/media/${post.featured_media}`
-              );
-              post.featured_image = response.data.media_details.sizes['medium'].source_url;
-            } catch (error) {
-              post.featured_image = null;
-            }
-
-            resolve(post);
-          });
-        });
-
-        Promise.all(requests).then((posts) => resolve(posts));
-      });
+    getFeaturedImages(posts) {
+      return Promise.all(posts.map(async post => {
+        let image = null;
+        if (post.featured_media > 0) {
+          try {
+            const media = await this.get(`/media/${post.featured_media}`);
+            image = media.data.media_details?.sizes?.medium?.source_url;
+          } catch {
+            // A post can still be displayed when its image is unavailable.
+          }
+        }
+        return { ...post, featured_image: image };
+      }));
     }
   },
 
